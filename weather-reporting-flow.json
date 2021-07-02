@@ -1,1 +1,316 @@
-[{"id":"main.flow","type":"tab","label":"main","disabled":false,"info":""},{"id":"d42db55f.9d4a18","type":"EventListener","z":"main.flow","name":"GET /weather/report","provider":"aws","eventSource":"api","dynamodbOperation":"","apiMethod":"get","apiUrl":"/weather/report","albMethod":"any","albUrl":"","bucketName":"","event":"s3:ObjectCreated:*","cognitoTrigger":"any","keventSource":"","kapiMethod":"any","kapiUrl":"","kcronexpression":"","zeventSource":"","zapiMethod":"any","zapiUrl":"","x":260,"y":260,"wires":[["1f1785f3.fe129a"]],"caname":"event-handler","category":"general"},{"id":"1f1785f3.fe129a","type":"Logger","z":"main.flow","name":"Log Entry","level":"INFO","message":"'Request received ' & msg.header.event.Records[0].queryStringParameters.location","format":"string","headers":{},"x":382.5,"y":160,"wires":[["6051ec48.693904"]],"caname":"logger","category":"logging"},{"id":"6051ec48.693904","type":"Set-Property","z":"main.flow","name":"Set-Property","rules":[{"t":"set","p":"location","pt":"camsg","to":"msg.header.event.Records[0].queryStringParameters.location","tot":"jsonata"}],"action":"","property":"","from":"","to":"","reg":false,"x":482.5,"y":300,"wires":[["730d3542.56148c"]],"caname":"setproperty","category":"transformation"},{"id":"9aba46b5.36e738","type":"HTTP Req","z":"main.flow","name":"Invoke_OpenWeatherAPI","method":"GET","ret":"obj","url":"'http://api.openweathermap.org/data/2.5/weather?zip=' & msg.location & '&appid=d018310fc953f32f6c7b98c16a984ff1'","responseTimeout":"","headers":{},"authtype":"none","secUser":"","secPassword":"","secToken":"","x":764.5,"y":380,"wires":[["5390b811.23ab18"]],"caname":"httprequest","category":"web"},{"id":"5390b811.23ab18","type":"Switch","z":"main.flow","name":"Switch","property":"msg.payload.weather[0].main","propertyType":"","rules":[{"t":"eq","v":"Fog","vt":"str"},{"t":"eq","v":"Clear","vt":"str"},{"t":"eq","v":"Mist","vt":"str"},{"t":"else"}],"repair":false,"outputs":4,"x":924.5,"y":260,"wires":[["63368f68.6b4f8"],["2da8f9e2.2ec8c6"],["3aa8f38b.02369c"],["efd9728f.49553"]],"caname":"switch","category":"routing"},{"id":"63368f68.6b4f8","type":"Datamapper","z":"main.flow","name":"Fog Handler","datamappertype":"msg.payload","testdataeditortype":"{\n    \"payload\": \"hello world\"\n}","x":1144.5,"y":160,"wires":[["9b71de02.4a2f6"]],"caname":"datamapper","category":"transformation"},{"id":"2da8f9e2.2ec8c6","type":"Datamapper","z":"main.flow","name":"Clear Handler","datamappertype":"msg.payload","testdataeditortype":"{\n    \"payload\": \"hello world\"\n}","x":1144.5,"y":280,"wires":[["9b71de02.4a2f6"]],"caname":"datamapper","category":"transformation"},{"id":"3aa8f38b.02369c","type":"Datamapper","z":"main.flow","name":"Mist Handler","datamappertype":"msg.payload","testdataeditortype":"{\n    \"payload\": \"hello world\"\n}","x":1144.5,"y":400,"wires":[["9b71de02.4a2f6"]],"caname":"datamapper","category":"transformation"},{"id":"efd9728f.49553","type":"Datamapper","z":"main.flow","name":"None Handler","datamappertype":"msg.payload","testdataeditortype":"{\n    \"payload\": \"hello world\"\n}","x":1144.5,"y":500,"wires":[["9b71de02.4a2f6"]],"caname":"datamapper","category":"transformation"},{"id":"9b71de02.4a2f6","type":"EventListener-End","z":"main.flow","name":"End","statusCode":"200","headers":{"Content-Type":"application/json"},"payload":"msg.payload","x":1404.5,"y":260,"wires":[],"caname":"eventlistenerend","category":"general"},{"id":"239636b6.66f81a","type":"catch","z":"main.flow","name":"catch","scope":null,"uncaught":false,"x":362.5,"y":660,"wires":[["60063fcb.e22a1"]],"caname":"catch","category":"exception"},{"id":"60063fcb.e22a1","type":"Logger","z":"main.flow","name":"Error Reporter","level":"INFO","message":"msg.error","format":"string","headers":{},"x":702.5,"y":660,"wires":[["7ce2cd21.f6b1f4"]],"caname":"logger","category":"logging"},{"id":"7ce2cd21.f6b1f4","type":"EventListener-End","z":"main.flow","name":"Error-End-Flow","statusCode":"500","headers":{"Content-Type":"application/json"},"payload":"msg.error.message","x":1042.5,"y":660,"wires":[],"caname":"eventlistenerend","category":"general"},{"id":"730d3542.56148c","type":"Logger","z":"main.flow","name":"confirm value is set ","level":"INFO","message":"msg.location","format":"string","headers":{},"x":602.5,"y":440,"wires":[["9aba46b5.36e738"]],"caname":"logger","category":"logging"}]
+[
+    {
+        "id": "main.flow",
+        "type": "tab",
+        "label": "main",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "d42db55f.9d4a18",
+        "type": "EventListener",
+        "z": "main.flow",
+        "name": "GET /weather/report",
+        "provider": "aws",
+        "eventSource": "api",
+        "dynamodbOperation": "",
+        "apiMethod": "get",
+        "apiUrl": "/weather/report",
+        "albMethod": "any",
+        "albUrl": "",
+        "bucketName": "",
+        "event": "s3:ObjectCreated:*",
+        "cognitoTrigger": "any",
+        "keventSource": "",
+        "kapiMethod": "any",
+        "kapiUrl": "",
+        "kcronexpression": "",
+        "zeventSource": "",
+        "zapiMethod": "any",
+        "zapiUrl": "",
+        "x": 260,
+        "y": 260,
+        "wires": [
+            [
+                "1f1785f3.fe129a"
+            ]
+        ],
+        "caname": "event-handler",
+        "category": "general"
+    },
+    {
+        "id": "1f1785f3.fe129a",
+        "type": "Logger",
+        "z": "main.flow",
+        "name": "Log Entry",
+        "level": "INFO",
+        "message": "'Request received ' & msg.header.event.Records[0].queryStringParameters.location",
+        "format": "string",
+        "headers": {},
+        "x": 382.5,
+        "y": 160,
+        "wires": [
+            [
+                "6051ec48.693904"
+            ]
+        ],
+        "caname": "logger",
+        "category": "logging"
+    },
+    {
+        "id": "6051ec48.693904",
+        "type": "Set-Property",
+        "z": "main.flow",
+        "name": "Set-Location-Value-Property",
+        "rules": [
+            {
+                "t": "set",
+                "p": "location",
+                "pt": "camsg",
+                "to": "msg.header.event.Records[0].queryStringParameters.location",
+                "tot": "jsonata"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 482.5,
+        "y": 300,
+        "wires": [
+            [
+                "730d3542.56148c"
+            ]
+        ],
+        "caname": "setproperty",
+        "category": "transformation"
+    },
+    {
+        "id": "9aba46b5.36e738",
+        "type": "HTTP Req",
+        "z": "main.flow",
+        "name": "Invoke_OpenWeatherAPI",
+        "method": "GET",
+        "ret": "obj",
+        "url": "'http://api.openweathermap.org/data/2.5/weather?zip=' & msg.location & '&appid=d018310fc953f32f6c7b98c16a984ff1'",
+        "responseTimeout": "",
+        "headers": {},
+        "authtype": "none",
+        "secUser": "",
+        "secPassword": "",
+        "secToken": "",
+        "x": 764.5,
+        "y": 380,
+        "wires": [
+            [
+                "5390b811.23ab18"
+            ]
+        ],
+        "caname": "httprequest",
+        "category": "web"
+    },
+    {
+        "id": "5390b811.23ab18",
+        "type": "Switch",
+        "z": "main.flow",
+        "name": "Switch",
+        "property": "msg.payload.weather[0].main",
+        "propertyType": "",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "Fog",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Clear",
+                "vt": "str"
+            },
+            {
+                "t": "eq",
+                "v": "Mist",
+                "vt": "str"
+            },
+            {
+                "t": "else"
+            }
+        ],
+        "repair": false,
+        "outputs": 4,
+        "x": 924.5,
+        "y": 260,
+        "wires": [
+            [
+                "63368f68.6b4f8"
+            ],
+            [
+                "2da8f9e2.2ec8c6"
+            ],
+            [
+                "3aa8f38b.02369c"
+            ],
+            [
+                "efd9728f.49553"
+            ]
+        ],
+        "caname": "switch",
+        "category": "routing"
+    },
+    {
+        "id": "63368f68.6b4f8",
+        "type": "Datamapper",
+        "z": "main.flow",
+        "name": "Fog Handler",
+        "datamappertype": "msg.payload",
+        "testdataeditortype": "{\n    \"payload\": \"hello world\"\n}",
+        "x": 1144.5,
+        "y": 160,
+        "wires": [
+            [
+                "9b71de02.4a2f6"
+            ]
+        ],
+        "caname": "datamapper",
+        "category": "transformation"
+    },
+    {
+        "id": "2da8f9e2.2ec8c6",
+        "type": "Datamapper",
+        "z": "main.flow",
+        "name": "Clear Handler",
+        "datamappertype": "msg.payload",
+        "testdataeditortype": "{\n    \"payload\": \"hello world\"\n}",
+        "x": 1144.5,
+        "y": 280,
+        "wires": [
+            [
+                "9b71de02.4a2f6"
+            ]
+        ],
+        "caname": "datamapper",
+        "category": "transformation"
+    },
+    {
+        "id": "3aa8f38b.02369c",
+        "type": "Datamapper",
+        "z": "main.flow",
+        "name": "Mist Handler",
+        "datamappertype": "msg.payload",
+        "testdataeditortype": "{\n    \"payload\": \"hello world\"\n}",
+        "x": 1144.5,
+        "y": 400,
+        "wires": [
+            [
+                "9b71de02.4a2f6"
+            ]
+        ],
+        "caname": "datamapper",
+        "category": "transformation"
+    },
+    {
+        "id": "efd9728f.49553",
+        "type": "Datamapper",
+        "z": "main.flow",
+        "name": "None Handler",
+        "datamappertype": "msg.payload",
+        "testdataeditortype": "{\n    \"payload\": \"hello world\"\n}",
+        "x": 1144.5,
+        "y": 500,
+        "wires": [
+            [
+                "9b71de02.4a2f6"
+            ]
+        ],
+        "caname": "datamapper",
+        "category": "transformation"
+    },
+    {
+        "id": "9b71de02.4a2f6",
+        "type": "EventListener-End",
+        "z": "main.flow",
+        "name": "End",
+        "statusCode": "200",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "payload": "msg.payload",
+        "x": 1404.5,
+        "y": 260,
+        "wires": [],
+        "caname": "eventlistenerend",
+        "category": "general"
+    },
+    {
+        "id": "239636b6.66f81a",
+        "type": "catch",
+        "z": "main.flow",
+        "name": "catch",
+        "scope": null,
+        "uncaught": false,
+        "x": 362.5,
+        "y": 660,
+        "wires": [
+            [
+                "60063fcb.e22a1"
+            ]
+        ],
+        "caname": "catch",
+        "category": "exception"
+    },
+    {
+        "id": "60063fcb.e22a1",
+        "type": "Logger",
+        "z": "main.flow",
+        "name": "Error Reporter",
+        "level": "INFO",
+        "message": "msg.error",
+        "format": "string",
+        "headers": {},
+        "x": 702.5,
+        "y": 660,
+        "wires": [
+            [
+                "7ce2cd21.f6b1f4"
+            ]
+        ],
+        "caname": "logger",
+        "category": "logging"
+    },
+    {
+        "id": "7ce2cd21.f6b1f4",
+        "type": "EventListener-End",
+        "z": "main.flow",
+        "name": "Error-End-Flow",
+        "statusCode": "500",
+        "headers": {
+            "Content-Type": "application/json"
+        },
+        "payload": "msg.error.message",
+        "x": 1042.5,
+        "y": 660,
+        "wires": [],
+        "caname": "eventlistenerend",
+        "category": "general"
+    },
+    {
+        "id": "730d3542.56148c",
+        "type": "Logger",
+        "z": "main.flow",
+        "name": "confirm value is set ",
+        "level": "INFO",
+        "message": "msg.location",
+        "format": "string",
+        "headers": {},
+        "x": 602.5,
+        "y": 440,
+        "wires": [
+            [
+                "9aba46b5.36e738"
+            ]
+        ],
+        "caname": "logger",
+        "category": "logging"
+    }
+]
